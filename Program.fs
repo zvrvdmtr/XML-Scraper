@@ -14,18 +14,18 @@ let buildObject (argv: string[]) =
     | 2 -> {Musician = argv[0]; Album = argv[1]}
     | _ -> {Musician = ""; Album = ""}
 
-let IsAlbumEqual album x = album = x.Album
+let IsAlbumEqual album = List.filter (fun x -> x.Album = album)
 
-let IsMusicianEqual musician x = musician = x.Musician
+let IsMusicianEqual musician = List.filter (fun x -> x.Musician = musician)
 
-let IsObjectsEqual object x = object = x
+let IsObjectsEqual completeObject = List.filter (fun x -> x = completeObject)
 
 let search object = 
     match object with
     | {Musician = ""; Album = ""} -> []
-    | {Musician = ""} -> List.filter (IsAlbumEqual object.Album) objects
-    | {Album = ""} -> List.filter (IsMusicianEqual object.Musician) objects
-    | _ -> List.filter (IsObjectsEqual object) objects
+    | {Musician = ""} -> IsAlbumEqual object.Album objects
+    | {Album = ""} -> IsMusicianEqual object.Musician objects
+    | _ -> IsObjectsEqual object objects
 
 [<EntryPoint>]
 let main argv = 
