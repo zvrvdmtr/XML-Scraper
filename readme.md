@@ -1,0 +1,1 @@
+Simple education F# project. FP first try.
