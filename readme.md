@@ -17,4 +17,4 @@ Please see [documentation](https://fsharp.org/use/mac/) for how to.
 CVS file should have format
 `id,band,album`
 Simple example added to project.
-You can download full file [here]([https://plastinka.com/fullcat)
+You can download full file [here]([https://plastinka.com/fullcat).
