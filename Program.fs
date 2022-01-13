@@ -1,20 +1,21 @@
-﻿// Add worker for file convertation from xlsx to csv using Gnumeric 
+﻿// TODO
+// Add worker for file convertation from xlsx to csv using Gnumeric 
 // Flow: 1) Download file 2) Convert file 3) Save with name foo_cuurent_date.csv 4) Remove old file
 // 5) If file doesnt ready and user made request, send response "Sorry service anavailable."
-// Add config for csv file path for parsing
-// Add command line flags "all" - for all matching rows, "first" - only first matching row
 module Program =
 
     open Parser
     open System
 
-    let queryByParams (line:string[]) = 
+    let some x z = printf "%A=x, %A=z" x z
+
+    let queryByParams (line:string[]) path = 
         match line.Length with
         | 0 -> printf "Not enought values"
         | 1 | 2 -> 
                 line
-                |> buildObject
-                |> search
+                |> buildSearchObject
+                |> doSearch <| path
                 |> Seq.iter (printf "%A\n")
         | _ -> printf "Too much values. Only 2 values require.\n"
 
@@ -27,11 +28,12 @@ module Program =
 
     [<EntryPoint>]
     let main argv = 
+        let rec readParams (input:string) filePath = 
+            input |> parseParams |> queryByParams <| filePath
+            readParams (Console.ReadLine()) filePath
+
         printf "Enter band and/or album.\nBand and album name must be comma separated.\n"
-
-        let rec readParams (input:string) = 
-            input |> parseParams |> queryByParams
-            readParams (Console.ReadLine())
-
-        readParams (Console.ReadLine())
+        match argv.Length with
+        | 0 -> printf "File path must be set"
+        | _ -> readParams (Console.ReadLine()) argv[0]
         0

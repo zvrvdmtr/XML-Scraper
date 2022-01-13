@@ -4,11 +4,12 @@ module Parser
 
     type Record = {Band: string; Album: string}
 
-    let file = CsvFile.Load("/Users/zverev/Documents/fsharp/text.csv")
+    let loadFile (filePath:string) = CsvFile.Load filePath
 
-    let objects = file.Rows |> Seq.map (fun i -> {Band = i[1]; Album = i[2]})
+    // TODO: Add exception handling
+    let recordObjects (file:CsvFile) = file.Rows |> Seq.map (fun i -> {Band = i[1]; Album = i[2]})
 
-    let buildObject (argv: string[]) = 
+    let buildSearchObject (argv: string[]) = 
         match argv.Length with
         | 0 -> {Band = ""; Album = ""}
         | 1 -> {Band = argv[0]; Album = ""}
@@ -23,7 +24,8 @@ module Parser
     let IsObjectsEqual completeObject = 
         List.filter (fun x -> x = completeObject)
 
-    let search object = 
+    let doSearch object path = 
+        let objects = recordObjects <| loadFile path
         match object with
         | {Band = ""; Album = ""} -> []
         | {Band = ""} -> IsAlbumEqual object.Album (Seq.toList objects)
